@@ -1,0 +1,356 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UsarEPIS : MonoBehaviour {
+
+	
+	public GameObject[] capacete;
+	public GameObject[] cilindro;
+	public GameObject[] cinto;
+	public GameObject[] luvas;
+	public GameObject[] mascara;
+
+	public GameObject[] botas;
+	public GameObject[] detectorGas;
+	public GameObject[] radioComunidador;
+	public GameObject[] talabarte;
+	private TempoAcao _tempoAcao;
+
+	public int quantEPIS;
+	public GameObject SetaIndicativaMissao;
+	public GameObject acessoEspacoConfinadoFechado;
+	public GameObject acessoEspacoConfinadoAberto;
+	public GameObject painelVideo;
+	public bool ativarVideo;
+	public GameObject verificarDirecao;
+	public GameObject continuar;
+
+	public GameObject travaSeguranca;
+	public GameObject travaSegurancaSensor;
+	public GameObject cadeado;
+	public GameObject cadeadoSensor;
+	public GameObject placaSinalizadora;
+	public GameObject placaSinalizadoraSensor;
+	public GameObject sinalizacaoSair;
+	public int quantMissaoCompleta;
+	public GameObject pontoSaida;
+	// Use this for initialization
+
+	public AudioSource sons;
+	public AudioClip[] clip;
+	public float tamanhoClip;
+	public bool acionarClip;
+	public float tamanhoClip1;
+	public bool acionarClip1;
+	public bool acionarClip2;
+	public bool acionarClip3;
+	public bool acionarClip4;
+	public bool inicarTempoMissao;
+	public float tamanhoClipMissao;
+	public GameObject instrucaoMissao;
+	public bool acionarClip5;
+	public float tamanhoClipFimMissao;
+	public bool iniciouClipFim;
+	void Awake()
+    {
+		sons.PlayOneShot(clip[0],0.8f);
+
+
+
+		tamanhoClip1 = clip[7].length;
+
+	}
+
+	void Start () {
+
+		_tempoAcao = FindObjectOfType(typeof(TempoAcao)) as TempoAcao;
+		acessoEspacoConfinadoAberto.SetActive(false);
+		painelVideo.SetActive(false);
+		verificarDirecao.SetActive(false);
+		continuar.SetActive(false);
+		detectorGas[1].SetActive(false);
+		radioComunidador[1].SetActive(false);
+		travaSeguranca.SetActive(false);
+		cadeado.SetActive(false);
+		placaSinalizadora.SetActive(false);
+		pontoSaida.SetActive(false);
+
+		cadeadoSensor.gameObject.GetComponent<BoxCollider>().enabled = false;
+		placaSinalizadoraSensor.gameObject.GetComponent<BoxCollider>().enabled = false;
+		travaSegurancaSensor.gameObject.GetComponent<BoxCollider>().enabled = false;
+		sinalizacaoSair.SetActive(false);
+
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if(quantEPIS == 9)
+        {
+			
+			ativarVideo = true;
+			verificarDirecao.SetActive(true);
+			tamanhoClip = 0;
+			acionarClip2 = true;
+
+			tamanhoClip1 += Time.deltaTime;
+		}
+
+
+
+		if (quantMissaoCompleta == 3  && iniciouClipFim == false)
+		{
+			sons.PlayOneShot(clip[5], 0.8f);
+
+			acionarClip5 = true;
+			iniciouClipFim = true;
+		}
+
+		if(acionarClip5 == true)
+        {
+			tamanhoClipFimMissao += Time.deltaTime;
+        }
+
+		if(tamanhoClipFimMissao>= 15.384f)
+        {
+			sinalizacaoSair.SetActive(true);
+			pontoSaida.SetActive(true);
+		}
+		
+
+		tamanhoClip += Time.deltaTime;
+
+
+
+		if (tamanhoClip >= 8.976f && acionarClip == false)
+		{
+			sons.PlayOneShot(clip[1], 0.8f);
+			acionarClip = true;
+			acionarClip1 = true;
+			tamanhoClip = 0;
+		}else if (tamanhoClip >= 8.088f && acionarClip1 == true)
+		{
+			sons.PlayOneShot(clip[2], 0.8f);
+			tamanhoClip = 0;
+			acionarClip1 = false;
+		}
+
+		if(acionarClip2 == true)
+        {
+			sons.PlayOneShot(clip[3], 0.8f);
+			acionarClip2 = false;
+		}
+
+		if(acionarClip3 == true)
+        {
+			sons.PlayOneShot(clip[4], 0.8f);
+			acionarClip3 = false;
+		}
+
+		if(acionarClip4 == true && inicarTempoMissao == false)
+        {
+			instrucaoMissao.SetActive(false);
+			sons.PlayOneShot(clip[5], 0.8f);
+			acionarClip4 = false;
+			inicarTempoMissao = true;
+		}
+		if(inicarTempoMissao == true)
+        {
+			tamanhoClipMissao += Time.deltaTime;
+        }
+
+		if(tamanhoClipMissao>= 13.008f)
+        {
+			travaSegurancaSensor.gameObject.GetComponent<BoxCollider>().enabled = false;
+		}
+
+	}
+
+	public void capacetePersonagem()
+    {
+		Destroy(capacete[0].gameObject);
+
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+		
+		capacete[1].SetActive(true);
+
+		quantEPIS++;
+
+	}
+
+	public void cilindroOxigenioPersonagem()
+	{
+		Destroy(cilindro[0].gameObject);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+
+		cilindro[1].SetActive(true);
+		quantEPIS++;
+	}
+
+	public void cintoPersonagem()
+	{
+		Destroy(cinto[0].gameObject);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+
+		cinto[1].SetActive(true);
+		quantEPIS++;
+	}
+
+	public void luvasPersonagem()
+	{
+		Destroy(luvas[0].gameObject);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+
+		luvas[1].SetActive(true);
+		quantEPIS++;
+	}
+
+	public void mascaraPersonagem()
+	{
+		Destroy(mascara[0].gameObject);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+
+		mascara[1].SetActive(true);
+		quantEPIS++;
+
+	}
+
+	public void botasPersonagem()
+	{
+		Destroy(botas[0].gameObject);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+		quantEPIS++;
+
+	}
+
+
+	public void detectorGasPersonagem()
+	{
+		detectorGas[0].SetActive(false);
+		detectorGas[1].SetActive(true);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+		quantEPIS++;
+	}
+
+	public void radioComunicadorPersonagem()
+	{
+		radioComunidador[0].SetActive(false);
+		radioComunidador[1].SetActive(true);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+		quantEPIS++;
+	}
+
+	public void talabartePrersonagem()
+	{
+		talabarte[0].SetActive(false);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+		quantEPIS++;
+	}
+
+	public void verificarInformacoes()
+    {
+		
+
+		StartCoroutine(tempoVideo());
+ 		
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+
+
+
+	}
+
+	public void continuarMissao()
+    {
+
+		acionarClip3 = true;
+		acessoEspacoConfinadoAberto.SetActive(true);
+		acessoEspacoConfinadoFechado.SetActive(false);
+		SetaIndicativaMissao.SetActive(true);
+		continuar.SetActive(false);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+
+	}
+
+	public void trava()
+    {
+		travaSeguranca.SetActive(true);
+		travaSegurancaSensor.SetActive(false);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+		quantMissaoCompleta++;
+	}
+
+	public void cadeadoSeguranca()
+    {
+		cadeado.SetActive(true);
+		cadeadoSensor.SetActive(false);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+		quantMissaoCompleta++;
+	}
+
+	public void placaSinalizadoraF()
+    {
+		placaSinalizadora.SetActive(true);
+		placaSinalizadoraSensor.SetActive(false);
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+		quantMissaoCompleta++;
+
+	}
+
+	public void sensorTravaSeguranca()
+    {
+
+		acionarClip4 = true;
+		_tempoAcao.imgTime.fillAmount = 0;
+		_tempoAcao.timeCorrent = 0;
+		_tempoAcao.isEnable = false;
+
+
+	}
+
+	IEnumerator tempoVideo()
+    {
+		verificarDirecao.SetActive(false);
+		Destroy(verificarDirecao.gameObject);
+
+		if (ativarVideo == true)
+        {
+
+			painelVideo.SetActive(true);
+			yield return new WaitForSeconds(156);
+			painelVideo.SetActive(false);
+			ativarVideo = false;
+			
+			continuar.SetActive(true);
+		}
+		
+    }
+
+}
